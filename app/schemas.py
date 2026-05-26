@@ -38,6 +38,7 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     id: int
+    username: str
     eco_points: int
     acc_balance: float
 
@@ -45,12 +46,10 @@ class User(UserBase):
         from_attributes = True
 
 # --- 4. 订单 (Order) 规范 ---
-# 前端下单时只需要传：谁买了哪个盲盒
 class OrderCreate(BaseModel):
     user_id: int
     blind_box_id: int
 
-# 后端返回给前端的完整订单信息
 class OrderResponse(BaseModel):
     id: int
     user_id: int
@@ -58,7 +57,24 @@ class OrderResponse(BaseModel):
     order_time: datetime
     total_amount: float
     pickup_code: str
-    blind_box: BlindBox  # 嵌套盲盒信息，方便前端直接展示盲盒名字和价格
+    blind_box: BlindBox
 
     class Config:
         from_attributes = True
+
+# --- 5. 💡 新增：登录与注册规范 ---
+class UserRegister(BaseModel):
+    username: str
+    name: str
+    phone: Optional[str] = None
+    password: str
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    message: str
+    user_id: int
+    name: str
+    token: str
